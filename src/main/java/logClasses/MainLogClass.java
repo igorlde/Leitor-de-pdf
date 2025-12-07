@@ -109,6 +109,29 @@ public class MainLogClass implements InterfaceLogs {
         }
     }
 
+    private boolean copyLogOverInsideProject() throws
+            NotFoundNoSuchException,
+            NotFoundPathLogException,
+            AcessRejectedException,
+            GlobalHelpLogException,
+            IOException {
+        final String userName = System.getProperty("user.home").toLowerCase();
+        final String path = userName +
+                "\\Documents\\some-projects-java\\LeitorPdfwithGUi2.0\\src\\main\\java\\configFiles\\books.log";
+        boolean isOk = false;
+        List<LogEntry> listLog = sendBackInformationLog();
+        Path pathInside = Paths.get(path);
+            try(FileWriter fw = new FileWriter(pathInside.toFile(), true);
+                BufferedWriter bw = new BufferedWriter(fw)){
+                    bw.write(listLog.toString());
+                    bw.newLine();
+                    isOk = true;
+            }catch (NotFoundPathLogException | GlobalHelpLogException | NotFoundNoSuchException | AcessRejectedException e){
+                throw new IOException(e);
+            }
+        return isOk;
+
+    }
 
     @Override
     public String toString() {
@@ -146,8 +169,10 @@ public class MainLogClass implements InterfaceLogs {
     //I do this to facillty test of codes
    public static void main(String[] args) throws IOException {
        MainLogClass mainLogClass = new MainLogClass();
-       mainLogClass.createdLog("molester book", 10, 153.4F);
+//       mainLogClass.createdLog("molester book", 10, 153.4F);
 //       System.out.println(systemOs); it do
+       System.out.println(
+               mainLogClass.copyLogOverInsideProject());
   }
 
     public Pattern getPattern() {

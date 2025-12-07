@@ -23,5 +23,5 @@ public interface InterfaceLogs {
             AcessRejectedException,
             GlobalHelpLogException,
             IOException;
-//    public void copyLogOverInsideProject(LocalDateTime timeOfSave String nameBook, Integer page, Float zoom);
+
 }
