@@ -12,10 +12,9 @@ public class ReadPdfCore implements corePDfInterface {
 
     @Override
     public String readPDF(String pathOfAchive, Integer numberOfPage){
-        PDDocument document = null;
-        try{
-            Path pdfPath = Paths.get(pathOfAchive);
-            document = Loader.loadPDF(pdfPath.toFile());
+
+        Path pdfPath = Paths.get(pathOfAchive);
+        try(PDDocument document = Loader.loadPDF(pdfPath.toFile());){
             int totalPages = document.getNumberOfPages();
             if (numberOfPage < 1 || numberOfPage > totalPages) {
                 return "Erro: Página " + numberOfPage + " fora do intervalo [1 - " + totalPages + "]";
@@ -30,13 +29,6 @@ public class ReadPdfCore implements corePDfInterface {
             System.err.println("Erro ao carregar ou processar o arquivo PDF: " + e.getMessage());
             e.printStackTrace();
             return "Erro ao carregar o PDF: " + e.getMessage();
-        } finally {
-            if (document != null) {
-                try {
-                    document.close();
-                } catch (IOException e) {
-                }
-            }
         }
     }
     private String searchNameBook(String pathOfAchive){
