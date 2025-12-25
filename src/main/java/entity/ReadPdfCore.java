@@ -1,34 +1,34 @@
 package entity;
 
 import corePDfinter.corePDfInterface;
-import logClasses.MainLogClass;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReadPdfCore implements corePDfInterface {
 
     @Override
-    public String readPDF(String pathOfAchive, Integer numberOfPage){
+    public List<String> readPDF(Path pathOfAchive){
 
-        Path pdfPath = Paths.get(pathOfAchive);
-        try(PDDocument document = Loader.loadPDF(pdfPath.toFile());){
+        try(PDDocument document = Loader.loadPDF(pathOfAchive.toFile());){
+            List<String> result = new ArrayList<>();
             int totalPages = document.getNumberOfPages();
-            if (numberOfPage < 1 || numberOfPage > totalPages) {
-                return "Erro: Página " + numberOfPage + " fora do intervalo [1 - " + totalPages + "]";
-            }
+            String textoDaPagina = null;
             PDFTextStripper stripper = new PDFTextStripper();
-            stripper.setStartPage(numberOfPage);
-            stripper.setEndPage(numberOfPage);
-            String textoDaPagina = stripper.getText(document);
-            return textoDaPagina;
+            for(int i = 1;i <= totalPages;++i) {
+                stripper.setStartPage(i);
+                stripper.setEndPage(i);
+                 textoDaPagina = stripper.getText(document);
+                 result.add(textoDaPagina);
+            }
+            return result;
 
         } catch (IOException e) {
-            System.err.println("Erro ao carregar ou processar o arquivo PDF: " + e.getMessage());
-            e.printStackTrace();
-            return "Erro ao carregar o PDF: " + e.getMessage();
+           throw new RuntimeException("Erro ao carregar ou processar o arquivo PDF: "+e);
         }
     }
     private String searchNameBook(String pathOfAchive){
@@ -43,15 +43,5 @@ public class ReadPdfCore implements corePDfInterface {
             }
         }
         return null;
-    }
-    @Override
-    public String mixLogOfBooks(String pathOfAchive, Integer numberOfPage, Float zoom) throws IOException {
-        MainLogClass mainLogClass = new MainLogClass();
-        //this part of code are gonna for mixed log with readPDF.
-
-        String nameBook = searchNameBook(pathOfAchive);
-//        mainLogClass.logNewBook(nameBook, numberOfPage, zoom);
-        String text = readPDF(pathOfAchive, numberOfPage);
-        return text;
     }
 }

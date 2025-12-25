@@ -1,9 +1,10 @@
 package corePDfinter;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 
 public interface corePDfInterface {
-    public String readPDF(String pathOfAchive, Integer numberOfPage);
-    public String mixLogOfBooks(String pathOfAchive, Integer numberOfPage, Float zoom) throws IOException;
+    public List<String> readPDF(Path pathOfAchive);
 
 }
