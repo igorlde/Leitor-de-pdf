@@ -1,44 +1,60 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-.kotlin
+### --- REGRAS PARA O SEU PROBLEMA ATUAL --- ###
+# Ignora arquivos compactados (como o seu .tar.gz)
+*.tar.gz
+*.zip
+*.7z
+*.rar
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+# Ignora o runtime/bibliotecas pesadas que causaram o erro
+LeitorPDF-Igor/lib/runtime/
+modules
+
+### --- JAVA & MAVEN --- ###
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.stackdump
+*.hs_err_pid*
+
+# Maven wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+### --- INTELLIJ IDEA --- ###
+.idea/
 *.iws
 *.iml
 *.ipr
+out/
+gen/
 
-### Eclipse ###
-.apt_generated
+### --- ECLIPSE --- ###
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
 .classpath
-.factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.factorypath
+.apt_generated/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+### --- VS CODE --- ###
 .vscode/
+.factorypath
+.history/
 
-### Mac OS ###
+### --- SISTEMA OPERACIONAL --- ###
 .DS_Store
+Thumbs.db
+desktop.ini
 
-git reset --soft HEAD~1
-git add .
-git commit -m "docs: remove bin and fix in the structed of project"
-git push origin dev
+### --- LOGS --- ###
+*.log
+logs/
