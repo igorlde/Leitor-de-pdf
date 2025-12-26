@@ -4,9 +4,9 @@ public class LogEntry {
     private final String timestamp;
     private final String bookName;
     private final int page;
-    private final String zoom;
+    private final float zoom;
 
-    public LogEntry(String timestamp, String bookName, int page, String zoom) {
+    public LogEntry(String timestamp, String bookName, int page, float zoom) {
         this.timestamp = timestamp;
         this.bookName = bookName;
         this.page = page;
@@ -17,7 +17,7 @@ public class LogEntry {
     public String getTimestamp() { return timestamp; }
     public String getBookName() { return bookName; }
     public int getPage() { return page; }
-    public String getZoom() { return zoom; }
+    public float getZoom() { return zoom; }
 
     @Override
     public String toString() {

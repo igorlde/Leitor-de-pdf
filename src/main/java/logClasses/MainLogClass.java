@@ -80,7 +80,8 @@ public class MainLogClass implements InterfaceLogs {
                     String timestamp = matcher.group(1).trim();
                     String bookName = matcher.group(2).trim();
                     int page = Integer.parseInt(matcher.group(3));
-                    String zoom = matcher.group(4).trim();
+                    String zoomString = matcher.group(4).trim().replace(",", "."); // Troca vírgula por ponto se necessário
+                    float zoom = Float.parseFloat(zoomString);
                     LogEntry entry = new LogEntry(timestamp, bookName, page, zoom);
                     parsedEntries.add(entry);
                 }
