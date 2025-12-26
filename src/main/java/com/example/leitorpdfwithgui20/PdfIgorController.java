@@ -1,6 +1,7 @@
 package com.example.leitorpdfwithgui20;
 
 import entity.ReadPdfCore;
+import javafx.css.Match;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -15,19 +16,31 @@ import javafx.stage.FileChooser;
 
 import java.awt.image.BufferedImage;
 import javafx.scene.control.ScrollPane;
+import logClasses.LogEntry;
+import logClasses.MainLogClass;
+
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PdfIgorController {
+    //this variables here do log too.
     private static File auxValueFile;//this variable is for help get value of files
     private static int currentPage = 0;
     private static float zoom = 1.5f;
-
-
+    private static String nameBook;
+    static final Pattern pattern = Pattern.compile("^\\[(.*?)\\] Livro: (.*?), Página: (\\d+), Zoom: (.*?)%$");
     private static boolean load = false;
-    @FXML private VBox vBox;
-    @FXML private TextField txtSearchPage;
-    @FXML private ScrollPane scrollPane;
+    @FXML
+    private VBox vBox;
+    @FXML
+    private TextField txtSearchPage;
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     public void initialize() {
@@ -35,8 +48,7 @@ public class PdfIgorController {
             scrollPane.vvalueProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal.doubleValue() >= 1.0 && !load) {
                     nextPage();
-                }
-                else if (newVal.doubleValue() <= 0.0 && currentPage > 0) {
+                } else if (newVal.doubleValue() <= 0.0 && currentPage > 0) {
                     previousPage();
                 }
             });
@@ -48,45 +60,65 @@ public class PdfIgorController {
         if (event.isControlDown()) {
             if (event.getCode() == KeyCode.PLUS || event.getCode() == KeyCode.ADD || event.getCode() == KeyCode.EQUALS) {
                 zoom += 0.2f;
-                atualizarVisualizacaoComZoom();
+                updateViewWithZoom();
             } else if (event.getCode() == KeyCode.MINUS || event.getCode() == KeyCode.SUBTRACT) {
                 zoom = Math.max(0.5f, zoom - 0.2f);
-                atualizarVisualizacaoComZoom();
+                updateViewWithZoom();
             }
         }
     }
 
-    private void atualizarVisualizacaoComZoom() {
+    private void updateViewWithZoom() {
         vBox.getChildren().clear();
         showPage();
     }
-    private void nextPage(){
-        if(load)return;
+
+    private void nextPage() {
+        if (load) return;
         load = true;
         currentPage++;
         showPage();
         new Thread(() -> {
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }
             load = false;
-        }).start();
+        }).start();//fix this functions after
     }
 
     private void previousPage() {
-        if(load)return;
+        if (load) return;
         load = true;
         currentPage--;
         showPage();
         new Thread(() -> {
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }
             load = false;
-        }).start();
+        }).start();//fix this functions after
     }
+
     @FXML
-    public void searchFile(MouseEvent event){
+    public void searchFile(MouseEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
+        ReadPdfCore readPdfCore = new ReadPdfCore();
+        MainLogClass mainLogClass = new MainLogClass();
+        List<LogEntry> listLog = mainLogClass.sendBackInformationLog();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos PDF", "*.pdf"));
         File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
-        if(selectedFile != null){
+        for (LogEntry entry : listLog) {
+
+            nameBook = entry.getBookName();
+            if (readPdfCore.searchNameBook(selectedFile.toString().toLowerCase()).equalsIgnoreCase(nameBook)) {
+                currentPage = entry.getPage();
+                zoom = entry.getZoom();
+            }
+        }
+
+        if (selectedFile != null) {
             Path pathPdf = selectedFile.toPath();
             auxValueFile = selectedFile;
             showPage();
@@ -113,13 +145,15 @@ public class PdfIgorController {
                         imageView.setFitWidth(vBox.getWidth() > 0 ? vBox.getWidth() : 800 * zoom);
 
                         vBox.getChildren().add(imageView);
+                        informationsLog();
                     });
                 }
             } catch (Exception e) {
-                throw new RuntimeException("erro ao carregar "+e);
+                throw new RuntimeException("erro ao carregar " + e);
             }
         }).start();
     }
+
     @FXML
     void searchPage(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
@@ -137,7 +171,20 @@ public class PdfIgorController {
                 System.out.println("Por favor, digite um número de página válido.");
             }
         }
+    }
 
+    private void informationsLog() {
+        ReadPdfCore readPdfCore = new ReadPdfCore();
+        MainLogClass mainLogClass = null;
+        try {
+            mainLogClass = new MainLogClass();
+            nameBook = readPdfCore.searchNameBook(auxValueFile.toString());
+            mainLogClass.createdLog(nameBook, currentPage, zoom);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 
 }

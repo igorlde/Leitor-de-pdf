@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+git reset --soft HEAD~1
+git add .
+git commit -m "docs: remove bin and fix in the structed of project"
+git push origin dev
