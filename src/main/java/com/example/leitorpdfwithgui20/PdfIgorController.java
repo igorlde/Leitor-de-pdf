@@ -1,5 +1,6 @@
 package com.example.leitorpdfwithgui20;
 
+import ExceptionsLogs.ProcessInterruptedException;
 import entity.ReadPdfCore;
 import javafx.css.Match;
 import javafx.embed.swing.SwingFXUtils;
@@ -19,12 +20,12 @@ import javafx.scene.control.ScrollPane;
 import logClasses.LogEntry;
 import logClasses.MainLogClass;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PdfIgorController {
@@ -33,7 +34,11 @@ public class PdfIgorController {
     private static int currentPage = 0;
     private static float zoom = 1.5f;
     private static String nameBook;
-    static final Pattern pattern = Pattern.compile("^\\[(.*?)\\] Livro: (.*?), Página: (\\d+), Zoom: (.*?)%$");
+
+    //https://osprogramadores.com/blog/2023/03/09/introducao-profiler-java/, i take of this site
+    private static final BufferedWriter WRITER = new BufferedWriter(new OutputStreamWriter(System.out));
+
+    private static final Pattern pattern = Pattern.compile("^\\[(.*?)\\] Livro: (.*?), Página: (\\d+), Zoom: (.*?)%$");
     private static boolean load = false;
     @FXML
     private VBox vBox;
@@ -82,6 +87,8 @@ public class PdfIgorController {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new ProcessInterruptedException("erro ao pula para a proxima pagina."+ e);
             }
             load = false;
         }).start();//fix this functions after
@@ -96,6 +103,8 @@ public class PdfIgorController {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new ProcessInterruptedException("erro ao pula para a proxima pagina."+ e);
             }
             load = false;
         }).start();//fix this functions after
@@ -110,7 +119,6 @@ public class PdfIgorController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos PDF", "*.pdf"));
         File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
         for (LogEntry entry : listLog) {
-
             nameBook = entry.getBookName();
             if (readPdfCore.searchNameBook(selectedFile.toString().toLowerCase()).equalsIgnoreCase(nameBook)) {
                 currentPage = entry.getPage();
@@ -119,7 +127,6 @@ public class PdfIgorController {
         }
 
         if (selectedFile != null) {
-            Path pathPdf = selectedFile.toPath();
             auxValueFile = selectedFile;
             showPage();
         }
@@ -132,10 +139,8 @@ public class PdfIgorController {
             try {
                 ReadPdfCore readPdfCore = new ReadPdfCore();
                 BufferedImage bf = readPdfCore.readSpecificPage(auxValueFile.toPath(), currentPage, zoom);
-
                 if (bf != null) {
                     WritableImage fxImage = SwingFXUtils.toFXImage(bf, null);
-
                     // back to the UI Thread for avoid the erro Gdk-WARNING
                     javafx.application.Platform.runLater(() -> {
                         ImageView imageView = new ImageView(fxImage);
@@ -148,14 +153,14 @@ public class PdfIgorController {
                         informationsLog();
                     });
                 }
-            } catch (Exception e) {
-                throw new RuntimeException("erro ao carregar " + e);
+            } catch (Exception e){
+                throw new RuntimeException("Erro a carregar pdf"+e);
             }
         }).start();
     }
 
     @FXML
-    void searchPage(KeyEvent event) {
+    void searchPage(KeyEvent event) throws IOException {
         if (event.getCode() == KeyCode.ENTER) {
             try {
                 int pageToSearch = Integer.parseInt(txtSearchPage.getText());
@@ -168,14 +173,16 @@ public class PdfIgorController {
                     showPage();
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Por favor, digite um número de página válido.");
+                WRITER.write("Por favor, digite um número de página válido.");
+                WRITER.flush();
+                WRITER.close();
             }
         }
     }
 
     private void informationsLog() {
         ReadPdfCore readPdfCore = new ReadPdfCore();
-        MainLogClass mainLogClass = null;
+        MainLogClass mainLogClass;
         try {
             mainLogClass = new MainLogClass();
             nameBook = readPdfCore.searchNameBook(auxValueFile.toString());
