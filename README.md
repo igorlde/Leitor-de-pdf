@@ -4,8 +4,12 @@ case you was read this README and your dowload give erro or you is use windows y
 give a git clone, after this inside project open terminal and enter this comands:
 
 <optional> mvn clean package. , if you also try do a jar version.
+
+
 <optional>rm -rf LeitorPDF-Igor, if you also try do a jar version.
+
 mvn package.
+
 jpackage --type app-image \
   --name "LeitorPDF-Igor" \
   --input target/ \
