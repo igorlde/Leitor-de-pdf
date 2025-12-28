@@ -1,21 +1,96 @@
-# Leitor-de-pdf
-this project is for me read my books, then I created it repository to share  this project with you
-case you was read this README and your dowload give erro or you is use windows you can try this comands:
-give a git clone, after this inside project open terminal and enter this comands:
+ Leitor-de-pdf
 
-<optional> mvn clean package. , if you also try do a jar version.
+Welcome! I created this project to read my books, and I'm sharing it here so you can use it too. This is a Java-based PDF reader with a graphical interface.
+ How to Build and Run
+
+If the pre-built download doesn't work or if you are on Windows, you can build the application manually from the source code.
+Prerequisites
+
+    Java JDK (17 or higher recommended)
+
+    Maven * Arch Linux: sudo pacman -S maven
+
+        Windows: Download from maven.apache.org, extract it, and add the bin folder to your System Environment Variables (PATH).
+
+ Build Instructions
+
+    Clone the repository:
+    Bash
+
+git clone https://github.com/seu-usuario/Leitor-de-pdf.git
+cd Leitor-de-pdf
+
+Clean and Package (Generate the JAR):
+Bash
+
+mvn clean package
+
+Generate the Native Executable (App Image): Run the following command to create a folder containing the executable and all necessary runtime files:
+Bash
+
+    jpackage --type app-image \
+      --name "LeitorPDF-Igor" \
+      --input target/ \
+      --main-jar LeitorPdfwithGUi2-0-1.0-SNAPSHOT.jar \
+      --main-class com.example.leitorpdfwithgui20.Launcher
+
+ Where is my app?
+
+After running the jpackage command:
+
+    Linux: A folder named LeitorPDF-Igor will be created. Go to bin/ inside it and run the file LeitorPDF-Igor.
+
+    Windows: Look for the LeitorPDF-Igor folder in your project directory and run the .exe file inside.
+
+ Common Issues
+
+    Maven not found: Ensure Maven is correctly installed. On Windows, verify your MAVEN_HOME and PATH variables.
+
+    Old Builds: If you want to start fresh, run rm -rf LeitorPDF-Igor (Linux) or delete the folder manually (Windows) before running the jpackage command again.
+
+O que eu mudei (Principais correções):
+
+    Gramática: Mudei de "case you was read" (que não existe no inglês) para "If you are reading".
+
+    Instruções de Variáveis: Expliquei melhor que no Windows o mais importante é adicionar a pasta bin ao PATH do sistema.
+
+    Organização: Usei ícones (emojis) e seções separadas para facilitar a leitura rápida.
+
+    Comandos: Coloquei os comandos dentro de blocos de código cinza, que são fáceis de copiar.
 
 
-<optional>rm -rf LeitorPDF-Igor, if you also try do a jar version.
 
-mvn package.
 
-jpackage --type app-image \
-  --name "LeitorPDF-Igor" \
-  --input target/ \
-  --main-jar LeitorPdfwithGUi2-0-1.0-SNAPSHOT.jar \
-  --main-class com.example.leitorpdfwithgui20.Launcher
+ Tecnologias Utilizadas
 
-  Caution: if you no dowload maven then dowload maven in the your system if not this comands gonna give you erros
-  if you equal the me use arch, use "sudo pacman -S maven", otherwise if use windows use, go to site maven.apache.org/download.cgi. dowload the bin and configure your variables envarioment C:\Program Files\Apache\maven\apache-maven-3.8.4, normally when descompact package it gonna for this path get it and create your variable called MAVEN_HOME and put this path there.
+Este projeto foi desenvolvido utilizando as seguintes ferramentas e bibliotecas:
 
+    Java: Linguagem principal do projeto.
+
+    JavaFX: Para a criação da interface gráfica (GUI).
+
+    Maven: Gestor de dependências e automação de build.
+
+    JPackage: Ferramenta do JDK para criar imagens nativas do executável.
+
+    Apache PDFBox (opcional): Se usaste esta biblioteca para ler o conteúdo dos PDFs, podes mencioná-la aqui.
+
+ Créditos e Contribuição
+
+Projeto criado por Igor.
+
+Se quiseres contribuir para este leitor de PDF:
+
+    Faz um Fork do projeto.
+
+    Cria uma Branch com a tua nova funcionalidade (git checkout -b feature/NovaFuncionalidade).
+
+    Faz um Commit das tuas alterações (git commit -m 'Adicionei X funcionalidade').
+
+    Faz um Push para a tua Branch (git push origin feature/NovaFuncionalidade).
+
+    Abre um Pull Request.
+
+
+
+    
