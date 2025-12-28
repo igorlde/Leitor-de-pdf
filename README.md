@@ -34,7 +34,7 @@ Bash
       --main-jar LeitorPdfwithGUi2-0-1.0-SNAPSHOT.jar \
       --main-class com.example.leitorpdfwithgui20.Launcher
 
- Where is my app?
+Where is my app?
 
 After running the jpackage command:
 
@@ -48,20 +48,10 @@ After running the jpackage command:
 
     Old Builds: If you want to start fresh, run rm -rf LeitorPDF-Igor (Linux) or delete the folder manually (Windows) before running the jpackage command again.
 
-O que eu mudei (Principais correções):
-
-    Gramática: Mudei de "case you was read" (que não existe no inglês) para "If you are reading".
-
-    Instruções de Variáveis: Expliquei melhor que no Windows o mais importante é adicionar a pasta bin ao PATH do sistema.
-
-    Organização: Usei ícones (emojis) e seções separadas para facilitar a leitura rápida.
-
-    Comandos: Coloquei os comandos dentro de blocos de código cinza, que são fáceis de copiar.
 
 
 
-
- Tecnologias Utilizadas
+   Tecnologias Utilizadas
 
 Este projeto foi desenvolvido utilizando as seguintes ferramentas e bibliotecas:
 
@@ -75,7 +65,7 @@ Este projeto foi desenvolvido utilizando as seguintes ferramentas e bibliotecas:
 
     Apache PDFBox (opcional): Se usaste esta biblioteca para ler o conteúdo dos PDFs, podes mencioná-la aqui.
 
- Créditos e Contribuição
+Créditos e Contribuição
 
 Projeto criado por Igor.
 
@@ -90,7 +80,3 @@ Se quiseres contribuir para este leitor de PDF:
     Faz um Push para a tua Branch (git push origin feature/NovaFuncionalidade).
 
     Abre um Pull Request.
-
-
-
-    
