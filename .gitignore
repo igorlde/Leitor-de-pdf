@@ -7,7 +7,7 @@
 
 # Ignora o runtime/bibliotecas pesadas que causaram o erro
 LeitorPDF-Igor/lib/runtime/
-Leitor PDF igor
+Leitor*/
 modules
 
 ### --- JAVA & MAVEN --- ###
