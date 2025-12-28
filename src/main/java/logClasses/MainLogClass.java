@@ -7,11 +7,10 @@ import ExceptionsLogs.NotFoundPathLogException;
 import OSEnums.LogSystemOSEnum;
 import OSEnums.PathsOsLogs;
 import logInterface.InterfaceLogs;
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +26,7 @@ public class MainLogClass implements InterfaceLogs {
     //very important this variable
     final Pattern pattern = Pattern.compile("^\\[(.*?)\\] Livro: (.*?), Página: (\\d+), Zoom: (.*?)%$");
     final String systemOs = System.getProperty("os.name").toLowerCase(Locale.ROOT);
-
+    private static boolean isFind = LogEntry.isFindLog();
     private Path logFilePath;
     protected String name;
     private LocalDateTime dateTime;
@@ -66,25 +65,35 @@ public class MainLogClass implements InterfaceLogs {
             AcessRejectedException,
             GlobalHelpLogException,
             IOException {
-        //variables of date, page, name, zoom.
-        //read log
+        /*
+        variables of date, page, name, zoom.
+         */
+
         Path pathLog = Paths.get(checkOs());
         List<LogEntry> parsedEntries = new ArrayList<>();
         String line = "";
-        try(BufferedReader br = Files.newBufferedReader(pathLog)){
+        /*
+         how I inverted the list take if you change the method of searchFile
+         from PdfIgorController because it'll give a erro of logic
+         */
+        try(ReversedLinesFileReader br = new ReversedLinesFileReader(pathLog.toFile(), StandardCharsets.UTF_8)){
             while((line = br.readLine()) != null){
-                //I have who study it
                 Matcher matcher = pattern.matcher(line);
-                if(matcher.find()){
-                    //It's amazing kk
-                    String timestamp = matcher.group(1).trim();
-                    String bookName = matcher.group(2).trim();
-                    int page = Integer.parseInt(matcher.group(3));
-                    String zoomString = matcher.group(4).trim().replace(",", "."); // Troca vírgula por ponto se necessário
-                    float zoom = Float.parseFloat(zoomString);
-                    LogEntry entry = new LogEntry(timestamp, bookName, page, zoom);
-                    parsedEntries.add(entry);
-                }
+                    if (matcher.find()) {
+                        int page0  = Integer.parseInt(matcher.group(3));
+                        if(page0 == 0)continue;
+
+                        String timestamp = matcher.group(1).trim();
+                        String bookName = matcher.group(2).trim();
+                        int page = Integer.parseInt(matcher.group(3));
+                        String zoomString = matcher.group(4).trim().replace(",", ".");
+                        float zoom = Float.parseFloat(zoomString);
+                        LogEntry entry = new LogEntry(timestamp, bookName, page, zoom);
+
+                        parsedEntries.add(entry);
+                        if (isFind) break;//if find break loop for not cause very consume of memory
+                    }
+
             }
         } catch (NotFoundPathLogException | GlobalHelpLogException | NotFoundNoSuchException | AcessRejectedException e) {
             throw new IOException(e);
@@ -169,11 +178,16 @@ public class MainLogClass implements InterfaceLogs {
     }
     //I do this to facillty test of codes
    public static void main(String[] args) throws IOException {
-       MainLogClass mainLogClass = new MainLogClass();
+        MainLogClass mainLogClass = new MainLogClass();
+       List<LogEntry> list = mainLogClass.sendBackInformationLog();
+
+       for (LogEntry alist : list){
+           System.out.println(alist.toString());
+       }
+
+
 //       mainLogClass.createdLog("molester book", 10, 153.4F);
 //       System.out.println(systemOs); it do
-       System.out.println(
-               mainLogClass.copyLogOverInsideProject());
   }
 
     public Pattern getPattern() {

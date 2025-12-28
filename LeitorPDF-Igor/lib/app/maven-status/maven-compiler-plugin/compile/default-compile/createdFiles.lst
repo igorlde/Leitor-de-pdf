@@ -17,6 +17,7 @@ com/example/leitorpdfwithgui20/PdfIgorController.class
 ExceptionsLogs/NotFoundNoSuchException.class
 OSEnums/LogSystemOSEnum.class
 logClasses/LogEntry.class
+ExceptionsLogs/ProcessInterruptedException.class
 logClasses/MainLogClass.class
 OSEnums/LogSystemOSEnum$3.class
 com/example/leitorpdfwithgui20/Launcher.class

@@ -28,18 +28,17 @@ public enum LogSystemOSEnum {
                 pathLog = Paths.get(PathsOsLogs.PATH_WINDOWS.pathEnvariomentSystem());
              }
              Path parentDir = pathLog.getParent();
+             stringOp.append("Verificando/Criando arquivos de log e diretorios...").append(parentDir).append(System.lineSeparator());
              if(parentDir != null && Files.notExists(parentDir)){
-                 WRITER.write("Criando diretorio windows no arquivos e programas" + parentDir);
-                 WRITER.flush();
-                 WRITER.close();
                  Files.createDirectories(parentDir);//it part of code, can give erros. take care
              }
              if(Files.notExists(pathLog)){
-                 WRITER.write("Criando arquivo log...."+ pathLog);
+                 Files.createFile(pathLog);
+                 WRITER.write(stringOp.toString());
                  WRITER.flush();
                  WRITER.close();
-                 Files.createFile(pathLog);
              }
+
              return;
     }
     },
@@ -58,18 +57,17 @@ public enum LogSystemOSEnum {
                 pathLog = Paths.get(PathsOsLogs.PATH_LINUX.pathEnvariomentSystem());
             }
             Path parentDir = pathLog.getParent();
+            stringOp.append("verificando/Criando arquivos de log e diretorios..").append(parentDir).append(System.lineSeparator());
             if(parentDir != null && Files.notExists(parentDir)){
-                WRITER.write("Criando diretorio em Linux Log...."+ parentDir);
-                WRITER.flush();
-                WRITER.close();
                 Files.createDirectories(parentDir);
             }
             if(Files.notExists(pathLog)){
-                WRITER.write("Criando arquivo log em Linux..."+ pathLog);
+                Files.createFile(pathLog);
+                WRITER.write(stringOp.toString());
                 WRITER.flush();
                 WRITER.close();
-                Files.createFile(pathLog);
             }
+
         }
     },
     MAC_OS{
@@ -85,20 +83,18 @@ public enum LogSystemOSEnum {
                 pathLog = Paths.get(PathsOsLogs.PATH_MACOS.pathEnvariomentSystem());
             }
             Path parentDir = pathLog.getParent();
+            stringOp.append("Verificando/Criando diretórios em macOS Log: ").append(parentDir).append(System.lineSeparator());
             if(parentDir != null && Files.notExists(parentDir)){
-                WRITER.write("Criando diretorio em macOS Log...."+ parentDir);
-                WRITER.flush();
-                WRITER.close();
                 Files.createDirectories(parentDir);
             }
             if (Files.notExists(pathLog)){
-                WRITER.write("Criando arquivo log em macOS ....."+ pathLog);
+                Files.createFile(pathLog);
+                WRITER.write(stringOp.toString());
                 WRITER.flush();
                 WRITER.close();
-                Files.createFile(pathLog);
+             }
             }
-        }
-    };
+        };
 
     public abstract void executedCreatedLogSystem(boolean accept) throws
             NotFoundNoSuchException,
@@ -109,6 +105,7 @@ public enum LogSystemOSEnum {
 
     LogSystemOSEnum(){
     }
+    private static final StringBuilder stringOp = new StringBuilder();
     private static final BufferedWriter WRITER = new BufferedWriter(new OutputStreamWriter(System.out));/*I take this improvement in perfomance, in
      the site called "https://osprogramadores.com/blog/2023/03/09/introducao-profiler-java/" */
     public static BufferedWriter getWRITER() {

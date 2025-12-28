@@ -3,6 +3,7 @@
 /home/igor/Leitor-de-pdf/src/main/java/ExceptionsLogs/GlobalHelpLogException.java
 /home/igor/Leitor-de-pdf/src/main/java/ExceptionsLogs/NotFoundNoSuchException.java
 /home/igor/Leitor-de-pdf/src/main/java/ExceptionsLogs/NotFoundPathLogException.java
+/home/igor/Leitor-de-pdf/src/main/java/ExceptionsLogs/ProcessInterruptedException.java
 /home/igor/Leitor-de-pdf/src/main/java/OSEnums/LogSystemOSEnum.java
 /home/igor/Leitor-de-pdf/src/main/java/OSEnums/PathsOsLogs.java
 /home/igor/Leitor-de-pdf/src/main/java/com/example/leitorpdfwithgui20/Application.java

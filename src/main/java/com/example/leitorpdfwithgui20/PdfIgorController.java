@@ -2,7 +2,6 @@ package com.example.leitorpdfwithgui20;
 
 import ExceptionsLogs.ProcessInterruptedException;
 import entity.ReadPdfCore;
-import javafx.css.Match;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -24,7 +23,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -40,6 +38,7 @@ public class PdfIgorController {
 
     private static final Pattern pattern = Pattern.compile("^\\[(.*?)\\] Livro: (.*?), Página: (\\d+), Zoom: (.*?)%$");
     private static boolean load = false;
+    private static boolean isFind;
     @FXML
     private VBox vBox;
     @FXML
@@ -113,25 +112,33 @@ public class PdfIgorController {
     @FXML
     public void searchFile(MouseEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        ReadPdfCore readPdfCore = new ReadPdfCore();
-        MainLogClass mainLogClass = new MainLogClass();
-        List<LogEntry> listLog = mainLogClass.sendBackInformationLog();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos PDF", "*.pdf"));
         File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
-        for (LogEntry entry : listLog) {
-            nameBook = entry.getBookName();
-            if (readPdfCore.searchNameBook(selectedFile.toString().toLowerCase()).equalsIgnoreCase(nameBook)) {
-                currentPage = entry.getPage();
-                zoom = entry.getZoom();
-            }
-        }
 
-        if (selectedFile != null) {
+        if(selectedFile == null)return;
+        ReadPdfCore readPdfCore = new ReadPdfCore();
+        String searchedName = readPdfCore.searchNameBook(selectedFile.getAbsolutePath().toLowerCase());
+        MainLogClass mainLogClass = new MainLogClass();
+
+        List<LogEntry> listLog = mainLogClass.sendBackInformationLog();
+        /*This loop retrieves the
+        last item from the list of logs and
+         then uses that item to find the last recorded log.
+         */
+            for(int i = 1;i <= listLog.size();i++){
+                LogEntry entry = listLog.get(i);
+                if(entry.getBookName().equalsIgnoreCase(searchedName)){
+                    nameBook = entry.getBookName();
+                    currentPage = entry.getPage();
+                    zoom = entry.getZoom();
+                    isFind = true;
+                    break;
+                }
+            }
             auxValueFile = selectedFile;
             showPage();
         }
-        return;
-    }
+
 
     private void showPage() {
         if (auxValueFile == null) return;
@@ -147,7 +154,7 @@ public class PdfIgorController {
                         imageView.setPreserveRatio(true);
 
                         // Ajuste dinâmico de largura para evitar que fique pequeno
-                        imageView.setFitWidth(vBox.getWidth() > 0 ? vBox.getWidth() : 800 * zoom);
+                        imageView.setFitWidth(vBox.getWidth() > 0 ? vBox.getWidth(): 800 * zoom);
 
                         vBox.getChildren().add(imageView);
                         informationsLog();
@@ -191,6 +198,9 @@ public class PdfIgorController {
             throw new RuntimeException(e);
         }
 
+    }
+    public boolean getFind(){
+        return isFind;
     }
 
 

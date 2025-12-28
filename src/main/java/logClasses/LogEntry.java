@@ -1,5 +1,7 @@
 package logClasses;
 
+import com.example.leitorpdfwithgui20.PdfIgorController;
+
 public class LogEntry {
     private final String timestamp;
     private final String bookName;
@@ -19,6 +21,10 @@ public class LogEntry {
     public int getPage() { return page; }
     public float getZoom() { return zoom; }
 
+    public static boolean isFindLog(){
+        PdfIgorController isFind = new PdfIgorController();
+        return isFind.getFind();
+    }
     @Override
     public String toString() {
         return String.format(
