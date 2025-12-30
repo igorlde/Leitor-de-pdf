@@ -8,7 +8,9 @@ import logClasses.LogEntry;
 
 import java.io.IOException;
 import java.util.List;
-
+/**
+ * @author igor
+ */
 public interface InterfaceLogs {
     public List<LogEntry> sendBackInformationLog() throws
             NotFoundNoSuchException,

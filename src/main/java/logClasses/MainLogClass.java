@@ -21,9 +21,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * @author igor
+ */
 public class MainLogClass implements InterfaceLogs {
-    //very important this variable
+    /**
+     * {@code Pattern pattern}
+     * {@code String systemOs}
+     * {@code boolean isFind }
+     * {@code  Path logFilePath;}
+     * {@code String name;}
+     * {@code LocalDateTime dateTime;}
+     * {@code  Integer page;}
+     * {@code Float zoom;}
+     */
     final Pattern pattern = Pattern.compile("^\\[(.*?)\\] Livro: (.*?), Página: (\\d+), Zoom: (.*?)%$");
     final String systemOs = System.getProperty("os.name").toLowerCase(Locale.ROOT);
     private static boolean isFind = LogEntry.isFindLog();
@@ -33,6 +44,16 @@ public class MainLogClass implements InterfaceLogs {
     protected Integer page;
     protected Float zoom;
 
+    /**
+     *
+     * @param name
+     * @param page
+     * @param zoom
+     * @throws NotFoundNoSuchException
+     * @throws NotFoundPathLogException
+     * @throws AcessRejectedException
+     * @throws IOException
+     */
     public MainLogClass(String name, Integer page, Float zoom) throws
             NotFoundNoSuchException,
             NotFoundPathLogException,
@@ -45,6 +66,14 @@ public class MainLogClass implements InterfaceLogs {
         this.page = page;
         this.zoom = zoom;
     }
+
+    /**
+     *
+     * @throws NotFoundNoSuchException
+     * @throws NotFoundPathLogException
+     * @throws AcessRejectedException
+     * @throws IOException
+     */
     public MainLogClass() throws
             NotFoundNoSuchException,
             NotFoundPathLogException,
@@ -58,6 +87,15 @@ public class MainLogClass implements InterfaceLogs {
         this.zoom = 150.5F;
     }
 
+    /**
+     *
+     * @return List<LogEntry>
+     * @throws NotFoundNoSuchException
+     * @throws NotFoundPathLogException
+     * @throws AcessRejectedException
+     * @throws GlobalHelpLogException
+     * @throws IOException
+     */
     @Override
     public List<LogEntry> sendBackInformationLog() throws
             NotFoundNoSuchException,
@@ -65,14 +103,14 @@ public class MainLogClass implements InterfaceLogs {
             AcessRejectedException,
             GlobalHelpLogException,
             IOException {
-        /*
+        /**
         variables of date, page, name, zoom.
          */
 
         Path pathLog = Paths.get(checkOs());
         List<LogEntry> parsedEntries = new ArrayList<>();
         String line = "";
-        /*
+        /**
          how I inverted the list take if you change the method of searchFile
          from PdfIgorController because it'll give a erro of logic
          */
@@ -101,6 +139,17 @@ public class MainLogClass implements InterfaceLogs {
         return parsedEntries;
     }
 
+    /**
+     *
+     * @param nameBook
+     * @param page
+     * @param zoom
+     * @throws NotFoundNoSuchException
+     * @throws NotFoundPathLogException
+     * @throws AcessRejectedException
+     * @throws GlobalHelpLogException
+     * @throws IOException
+     */
     @Override
     public void createdLog(String nameBook, Integer page, Float zoom) throws
             NotFoundNoSuchException,
@@ -119,30 +168,6 @@ public class MainLogClass implements InterfaceLogs {
         }
     }
 
-    private boolean copyLogOverInsideProject() throws
-            NotFoundNoSuchException,
-            NotFoundPathLogException,
-            AcessRejectedException,
-            GlobalHelpLogException,
-            IOException {
-        final String userName = System.getProperty("user.home").toLowerCase();
-        final String path = userName +
-                "\\Documents\\some-projects-java\\LeitorPdfwithGUi2.0\\src\\main\\java\\configFiles\\books.log";
-        boolean isOk = false;
-        List<LogEntry> listLog = sendBackInformationLog();
-        Path pathInside = Paths.get(path);
-            try(FileWriter fw = new FileWriter(pathInside.toFile(), true);
-                BufferedWriter bw = new BufferedWriter(fw)){
-                    bw.write(listLog.toString());
-                    bw.newLine();
-                    isOk = true;
-            }catch (NotFoundPathLogException | GlobalHelpLogException | NotFoundNoSuchException | AcessRejectedException e){
-                throw new IOException(e);
-            }
-        return isOk;
-
-    }
-
     @Override
     public String toString() {
         // Formata a data/hora para ser legível no log.
@@ -157,8 +182,17 @@ public class MainLogClass implements InterfaceLogs {
                 this.zoom
         );
     }
-    //check the systems OS
-    private String checkOs() throws
+
+    /**
+     * check the systems OS
+     * @return String
+     * @throws NotFoundNoSuchException
+     * @throws NotFoundPathLogException
+     * @throws AcessRejectedException
+     * @throws GlobalHelpLogException
+     * @throws IOException
+     */
+    public String checkOs() throws
             NotFoundNoSuchException,
             NotFoundPathLogException,
             AcessRejectedException,
@@ -176,64 +210,99 @@ public class MainLogClass implements InterfaceLogs {
         }
         return null;
     }
-    //I do this to facillty test of codes
-   public static void main(String[] args) throws IOException {
-        MainLogClass mainLogClass = new MainLogClass();
-       List<LogEntry> list = mainLogClass.sendBackInformationLog();
 
-       for (LogEntry alist : list){
-           System.out.println(alist.toString());
-       }
-
-
-//       mainLogClass.createdLog("molester book", 10, 153.4F);
-//       System.out.println(systemOs); it do
-  }
-
+    /**
+     *
+     * @return Pattern
+     */
     public Pattern getPattern() {
         return pattern;
     }
 
+    /**
+     *
+     * @return String
+     */
     public String getSystemOs() {
         return systemOs;
     }
 
+    /**
+     *
+     * @return Path
+     */
     public Path getLogFilePath() {
         return logFilePath;
     }
 
+    /**
+     *
+     * @param logFilePath
+     */
     public void setLogFilePath(Path logFilePath) {
         this.logFilePath = logFilePath;
     }
 
+    /**
+     *
+     * @return String
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return LocalDateTime
+     */
     public LocalDateTime getDateTime() {
         return dateTime;
     }
 
+    /**
+     *
+     * @param dateTime
+     */
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
+    /**
+     *
+     * @return Integer
+     */
     public Integer getPage() {
         return page;
     }
 
+    /**
+     *
+     * @param page
+     */
     public void setPage(Integer page) {
         this.page = page;
     }
 
+    /**
+     *
+     * @return Float
+     */
     public Float getZoom() {
         return zoom;
     }
 
+    /**
+     *
+     * @param zoom
+     */
     public void setZoom(Float zoom) {
         this.zoom = zoom;
     }

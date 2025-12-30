@@ -1,8 +1,15 @@
 package OSEnums;
 
 import java.util.Locale;
-
+/**
+ * @author igor
+ */
 public enum PathsOsLogs {
+
+    /**
+     * @see logClasses.MainLogClass
+     * this enums pass the path of the System Os
+     */
 
     PATH_LINUX{
         final String userNameOs = System.getProperty("user.home").toLowerCase(Locale.ROOT);
@@ -12,6 +19,11 @@ public enum PathsOsLogs {
             return LOG_LINUX;
         }
     },
+
+    /**
+     * @see logClasses.MainLogClass
+     * this enums pass the path of the System Os
+     */
     PATH_WINDOWS{
         final String userNameOs = System.getProperty("user.home").toLowerCase(Locale.ROOT);
         @Override
@@ -20,6 +32,11 @@ public enum PathsOsLogs {
             return LOG_WINDOWS;
         }
     },
+
+    /**
+     * @see logClasses.MainLogClass
+     * this enums pass the path of the System Os
+     */
     PATH_MACOS{
         final String userNameOs = System.getProperty("user.home").toLowerCase(Locale.ROOT);
         @Override

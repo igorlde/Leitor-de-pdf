@@ -4,6 +4,7 @@ import ExceptionsLogs.AcessRejectedException;
 import ExceptionsLogs.GlobalHelpLogException;
 import ExceptionsLogs.NotFoundNoSuchException;
 import ExceptionsLogs.NotFoundPathLogException;
+import logClasses.MainLogClass;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,9 +12,17 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+/**
+ * @author igor
+ */
 public enum LogSystemOSEnum {
 
+    /**
+     * @see MainLogClass#checkOs()
+     * this enums get the path of Enum PathsOsLogs, is create
+     * the directore of log
+     * @see PathsOsLogs
+     */
     WINDOWS{
          @Override
          public void executedCreatedLogSystem(boolean accept) throws
@@ -42,8 +51,12 @@ public enum LogSystemOSEnum {
              return;
     }
     },
-
-    //Linux log function for create in the system
+    /**
+     * @see MainLogClass#checkOs()
+     * this enums get the path of Enum PathsOsLogs, is create
+     * the directore of log
+     * @see PathsOsLogs
+     */
     LINUX{
         @Override
         public void executedCreatedLogSystem(boolean accept) throws
@@ -70,6 +83,12 @@ public enum LogSystemOSEnum {
 
         }
     },
+    /**
+     * @see MainLogClass#checkOs()
+     * this enums get the path of Enum PathsOsLogs, is create
+     * the directore of log
+     * @see PathsOsLogs
+     */
     MAC_OS{
         @Override
         public void executedCreatedLogSystem(boolean accept) throws

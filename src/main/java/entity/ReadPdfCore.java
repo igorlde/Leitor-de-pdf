@@ -13,8 +13,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author igor
+ */
 public class ReadPdfCore extends Application implements corePDfInterface {
 
+    /**
+     *
+     * @param pathOfAchive
+     * @return List<String
+     * this functions read every pdf, but convert in text
+     */
     @Override
     public List<String> readPDF(Path pathOfAchive) {
 
@@ -36,11 +45,19 @@ public class ReadPdfCore extends Application implements corePDfInterface {
         }
     }
 
+    /**
+     *
+     * @param pathOfPdf
+     * @param pageIndex
+     * @param zoom
+     * @return BufferedImage
+     * this functions read every pdf and reder, it images
+     */
     public BufferedImage readSpecificPage(Path pathOfPdf, int pageIndex, float zoom) {
         try (PDDocument document = Loader.loadPDF(pathOfPdf.toFile())) {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             if (pageIndex >= 0 && pageIndex < document.getNumberOfPages()) {
-                return pdfRenderer.renderImage(pageIndex, 1.5f); // 1.5f é o zoom/qualidade
+                return pdfRenderer.renderImage(pageIndex, zoom);
             }
         } catch (IOException | IllegalStateException | IndexOutOfBoundsException e) {
             throw new RuntimeException(e);
@@ -48,6 +65,13 @@ public class ReadPdfCore extends Application implements corePDfInterface {
         return null;
     }
 
+    /**
+     *
+     * @param pathOfAchive
+     * @return String
+     * this function get of name from pdf and catch only te name of pdf
+     * for pass to log.
+     */
     public String searchNameBook(String pathOfAchive) {
         String partOfStringName = pathOfAchive.replace('\\', '/');
         String[] parts = partOfStringName.split("/");

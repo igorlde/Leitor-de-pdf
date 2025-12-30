@@ -21,7 +21,7 @@
 
         <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS">
             <content>
-                <VBox fx:id="vBox" alignment="TOP_CENTER" onKeyPressed="#zoomPage" spacing="10.0" style="-fx-background-color: #444444;">
+                <VBox fx:id="vBox" alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: #444444;">
                     <padding>
                         <Insets bottom="20.0" top="20.0" />
                     </padding>

@@ -2,9 +2,11 @@ package com.example.leitorpdfwithgui20;
 
 import ExceptionsLogs.ProcessInterruptedException;
 import entity.ReadPdfCore;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -24,21 +26,52 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
-import java.util.regex.Pattern;
 
+/**
+ * @author igor
+ *
+ * this class is the main controller
+ *
+ */
 public class PdfIgorController {
-    //this variables here do log too.
+    /**
+    These variables here are also used for logging.
+     To see the log and how it works, go into the
+     LogClasses package and examine the {@link MainLogClass}
+
+     {@code File auxValueFIle} it variable is for get value of the files
+     from method searchFile to help pass this values for other functions.
+
+     {@code int currentPage} it variables is for get page of pdf.
+
+     {@code float zoom} it simple, get values for zoom.
+      for a cal of zoom get value zoom * 100, if zoom = 1.1, zoom = 1.1 * 100 = 110% of zoom
+     {@code String nameBook} it get the name of pdf
+     **/
+
     private static File auxValueFile;//this variable is for help get value of files
-    private static int currentPage = 0;
-    private static float zoom = 1.5f;
+    private static int currentPage;
+    private static float zoom;
     private static String nameBook;
 
-    //https://osprogramadores.com/blog/2023/03/09/introducao-profiler-java/, i take of this site
-    private static final BufferedWriter WRITER = new BufferedWriter(new OutputStreamWriter(System.out));
+    /**
+     * https://osprogramadores.com/blog/2023/03/09/introducao-profiler-java/, i take of this site
+     {@code BufferedWriter WRITER }This variable provides an improvement to the system,
+     because strings in Java consume a lot of memory if they are not controlled.
 
-    private static final Pattern pattern = Pattern.compile("^\\[(.*?)\\] Livro: (.*?), Página: (\\d+), Zoom: (.*?)%$");
+     {@code boolean load}this variable is a
+     change of check, if will load the next page or previous page
+
+     {@code boolena isFind}This variable is a way to
+     check if it also finds the PDF log.
+     This is to avoid creating a very large O(n) loop.
+     {@link MainLogClass} {@link LogEntry} <- it variable and
+     use here as well.
+    */
+    private static final BufferedWriter WRITER = new BufferedWriter(new OutputStreamWriter(System.out));
     private static boolean load = false;
     private static boolean isFind;
+
     @FXML
     private VBox vBox;
     @FXML
@@ -46,6 +79,9 @@ public class PdfIgorController {
     @FXML
     private ScrollPane scrollPane;
 
+    /**
+     * @return void
+     */
     @FXML
     public void initialize() {
         if (scrollPane != null) {
@@ -57,23 +93,39 @@ public class PdfIgorController {
                 }
             });
         }
+        setZoom();
     }
 
-    @FXML
-    void zoomPage(KeyEvent event) {
-        if (event.isControlDown()) {
-            if (event.getCode() == KeyCode.PLUS || event.getCode() == KeyCode.ADD || event.getCode() == KeyCode.EQUALS) {
-                zoom += 0.2f;
-                updateViewWithZoom();
-            } else if (event.getCode() == KeyCode.MINUS || event.getCode() == KeyCode.SUBTRACT) {
-                zoom = Math.max(0.5f, zoom - 0.2f);
-                updateViewWithZoom();
+    /**
+            I created this function to place inside the `initialize`
+            method because the `zoomPage` function is not working. then now
+            zoom work.
+            @return void
+         */
+    private void setZoom(){
+
+        Platform.runLater(() -> {
+            Scene scene = scrollPane.getScene();
+            if (scene != null) {
+                scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+                    if (event.isControlDown()) {
+                        if (event.getCode() == KeyCode.PLUS || event.getCode() == KeyCode.ADD || event.getCode() == KeyCode.EQUALS) {
+                            zoom += 0.2f;
+                            updateViewWithZoom();
+                            event.consume();
+                        } else if (event.getCode() == KeyCode.MINUS || event.getCode() == KeyCode.SUBTRACT) {
+                            zoom = Math.max(0.5f, zoom - 0.2f);
+                            updateViewWithZoom();
+                            event.consume();
+                        }
+                    }
+                });
             }
-        }
+        });
     }
-
     private void updateViewWithZoom() {
         vBox.getChildren().clear();
+          System.out.println(zoom);// variable zoom and methods no called I'm gonna fix it.
         showPage();
     }
 
@@ -121,7 +173,7 @@ public class PdfIgorController {
         MainLogClass mainLogClass = new MainLogClass();
 
         List<LogEntry> listLog = mainLogClass.sendBackInformationLog();
-        /*This loop retrieves the
+        /**this loop retrieves the
         last item from the list of logs and
          then uses that item to find the last recorded log.
          */
@@ -149,12 +201,14 @@ public class PdfIgorController {
                 if (bf != null) {
                     WritableImage fxImage = SwingFXUtils.toFXImage(bf, null);
                     // back to the UI Thread for avoid the erro Gdk-WARNING
-                    javafx.application.Platform.runLater(() -> {
+                    Platform.runLater(() -> {
                         ImageView imageView = new ImageView(fxImage);
                         imageView.setPreserveRatio(true);
 
-                        // Ajuste dinâmico de largura para evitar que fique pequeno
-                        imageView.setFitWidth(vBox.getWidth() > 0 ? vBox.getWidth(): 800 * zoom);
+                        /*
+                        have a math for zoom here where be (vbox.getWitdth() * zoom) -1
+                         */
+                        imageView.setFitWidth(vBox.getWidth() > 0 ? (vBox.getWidth() * zoom) - 2: (929 * zoom) - 2);
 
                         vBox.getChildren().add(imageView);
                         informationsLog();
