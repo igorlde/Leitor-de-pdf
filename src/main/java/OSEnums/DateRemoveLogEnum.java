@@ -50,7 +50,7 @@ public enum DateRemoveLogEnum {
     private static final BufferedWriter WRITER = new BufferedWriter(new OutputStreamWriter(System.out));
     private static MainLogClass mainLogClass;
     private static Path pathOfPdf;
-    private static Calendar calendar = new GregorianCalendar(2025, Calendar.JANUARY, 30);
+    private static Calendar calendar = new GregorianCalendar(2026, Calendar.JANUARY, 4);
 
     static {
         try {

@@ -3,6 +3,8 @@ package OSEnums;
 import java.util.Locale;
 /**
  * @author igor
+ * this enum used to pass values of path of each
+ * system OS.
  */
 public enum PathsOsLogs {
 

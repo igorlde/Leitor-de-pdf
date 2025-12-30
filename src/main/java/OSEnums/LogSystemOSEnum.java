@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 /**
  * @author igor
+ * This enum is used to navigate the system and create directories.
  */
 public enum LogSystemOSEnum {
 
@@ -115,6 +116,15 @@ public enum LogSystemOSEnum {
             }
         };
 
+    /**
+     *
+     * @param accept
+     * @throws NotFoundNoSuchException
+     * @throws AcessRejectedException
+     * @throws GlobalHelpLogException
+     * @throws NotFoundPathLogException
+     * @throws IOException
+     */
     public abstract void executedCreatedLogSystem(boolean accept) throws
             NotFoundNoSuchException,
             AcessRejectedException,
@@ -124,10 +134,14 @@ public enum LogSystemOSEnum {
 
     LogSystemOSEnum(){
     }
+
+    /**
+     * I take this improvement in perfomance, in
+     *      the site called "https://osprogramadores.com/blog/2023/03/09/introducao-profiler-java/"
+     * {@code  StringBuilder stringOp}
+     * {@code BufferedWriter WRITER}
+     */
     private static final StringBuilder stringOp = new StringBuilder();
-    private static final BufferedWriter WRITER = new BufferedWriter(new OutputStreamWriter(System.out));/*I take this improvement in perfomance, in
-     the site called "https://osprogramadores.com/blog/2023/03/09/introducao-profiler-java/" */
-    public static BufferedWriter getWRITER() {
-        return WRITER;
-    }
+    private static final BufferedWriter WRITER = new BufferedWriter(new OutputStreamWriter(System.out));
+
 }

@@ -57,7 +57,7 @@ public class ReadPdfCore extends Application implements corePDfInterface {
         try (PDDocument document = Loader.loadPDF(pathOfPdf.toFile())) {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             if (pageIndex >= 0 && pageIndex < document.getNumberOfPages()) {
-                return pdfRenderer.renderImage(pageIndex, zoom);
+                return pdfRenderer.renderImage(pageIndex, 1.5f);
             }
         } catch (IOException | IllegalStateException | IndexOutOfBoundsException e) {
             throw new RuntimeException(e);

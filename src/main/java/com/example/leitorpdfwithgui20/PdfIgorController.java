@@ -1,6 +1,7 @@
 package com.example.leitorpdfwithgui20;
 
 import ExceptionsLogs.ProcessInterruptedException;
+import OSEnums.DateRemoveLogEnum;
 import entity.ReadPdfCore;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -49,10 +50,12 @@ public class PdfIgorController {
      {@code String nameBook} it get the name of pdf
      **/
 
-    private static File auxValueFile;//this variable is for help get value of files
+    private static File auxValueFile;
     private static int currentPage;
     private static float zoom;
     private static String nameBook;
+    private static  int page = 0;
+    private static boolean isThreePage = false;
 
     /**
      * https://osprogramadores.com/blog/2023/03/09/introducao-profiler-java/, i take of this site
@@ -72,6 +75,12 @@ public class PdfIgorController {
     private static boolean load = false;
     private static boolean isFind;
 
+    /**
+     * {@code vBOx vBox} a new box for pages render.
+     * {@code TextField txtSearchPage} variable that
+     * get search per number
+     * {@code ScrollPane scroolPane}
+     */
     @FXML
     private VBox vBox;
     @FXML
@@ -123,16 +132,29 @@ public class PdfIgorController {
             }
         });
     }
+
+    /**
+     * this function clear the VBOX to a new page with reder diferent.
+     */
     private void updateViewWithZoom() {
         vBox.getChildren().clear();
           System.out.println(zoom);// variable zoom and methods no called I'm gonna fix it.
         showPage();
     }
 
+    /**
+     * this function get for reder the next page
+     * and as well, save page for log
+     */
     private void nextPage() {
         if (load) return;
         load = true;
+        page++;
         currentPage++;
+        if(page >= 3){
+            isThreePage = true;
+            page = 0;
+        }
         showPage();
         new Thread(() -> {
             try {
@@ -142,13 +164,21 @@ public class PdfIgorController {
                 throw new ProcessInterruptedException("erro ao pula para a proxima pagina."+ e);
             }
             load = false;
-        }).start();//fix this functions after
+        }).start();
     }
 
+    /**
+     * the function get previous pages
+     * when you on scroll to up.
+     */
     private void previousPage() {
         if (load) return;
         load = true;
+        page--;
         currentPage--;
+        if(page <= 3){
+            isThreePage = true;
+        }
         showPage();
         new Thread(() -> {
             try {
@@ -161,6 +191,12 @@ public class PdfIgorController {
         }).start();//fix this functions after
     }
 
+    /**
+     * this function get path of pdf.
+     * and as well pass values of log for the variables
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void searchFile(MouseEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -191,7 +227,10 @@ public class PdfIgorController {
             showPage();
         }
 
-
+    /**
+     *this show page kk
+     * and stuck every function in there
+     */
     private void showPage() {
         if (auxValueFile == null) return;
         new Thread(() -> {
@@ -211,7 +250,7 @@ public class PdfIgorController {
                         imageView.setFitWidth(vBox.getWidth() > 0 ? (vBox.getWidth() * zoom) - 2: (929 * zoom) - 2);
 
                         vBox.getChildren().add(imageView);
-                        informationsLog();
+                        if(isThreePage)informationsLog();
                     });
                 }
             } catch (Exception e){
@@ -220,6 +259,11 @@ public class PdfIgorController {
         }).start();
     }
 
+    /**
+     * this function pass value of page search for variables
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void searchPage(KeyEvent event) throws IOException {
         if (event.getCode() == KeyCode.ENTER) {
@@ -241,18 +285,31 @@ public class PdfIgorController {
         }
     }
 
+    /**
+     * this function get the values of variables and pass for is function
+     * @see MainLogClass#createdLog(String, Integer, Float)
+     * @see DateRemoveLogEnum#ONE_YEAR_REMOVE_LOG, this enum remove log when pass a year.
+     *
+     * and if you arrived here, happy new year advance, lest go 2026!!!
+     */
     private void informationsLog() {
         ReadPdfCore readPdfCore = new ReadPdfCore();
         MainLogClass mainLogClass;
         try {
             mainLogClass = new MainLogClass();
             nameBook = readPdfCore.searchNameBook(auxValueFile.toString());
-            mainLogClass.createdLog(nameBook, currentPage, zoom);
+                mainLogClass.createdLog(nameBook, currentPage, zoom);
+            DateRemoveLogEnum.ONE_YEAR_REMOVE_LOG.executeRemove();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
+
+    /**
+     * get variable find for pass to log.
+     * @return boolean
+     */
     public boolean getFind(){
         return isFind;
     }
