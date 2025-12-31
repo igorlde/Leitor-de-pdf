@@ -54,7 +54,8 @@ public class PdfIgorController {
     private static int currentPage;
     private static float zoom;
     private static String nameBook;
-    private static  int page = 0;
+    private static  int pageNext = 0;
+    private static int pagePrivous = 0;
     private static boolean isThreePage = false;
 
     /**
@@ -149,11 +150,11 @@ public class PdfIgorController {
     private void nextPage() {
         if (load) return;
         load = true;
-        page++;
+        pageNext++;
         currentPage++;
-        if(page >= 3){
+        if(pageNext >= 3){
             isThreePage = true;
-            page = 0;
+            pageNext = 0;
         }
         showPage();
         new Thread(() -> {
@@ -174,10 +175,11 @@ public class PdfIgorController {
     private void previousPage() {
         if (load) return;
         load = true;
-        page--;
+        pagePrivous++;
         currentPage--;
-        if(page <= 3){
+        if(pagePrivous >= 3){
             isThreePage = true;
+            pagePrivous = 0;
         }
         showPage();
         new Thread(() -> {
@@ -250,7 +252,10 @@ public class PdfIgorController {
                         imageView.setFitWidth(vBox.getWidth() > 0 ? (vBox.getWidth() * zoom) - 2: (929 * zoom) - 2);
 
                         vBox.getChildren().add(imageView);
-                        if(isThreePage)informationsLog();
+                        if(isThreePage){
+                            informationsLog();
+                            isThreePage = false;
+                        };
                     });
                 }
             } catch (Exception e){
