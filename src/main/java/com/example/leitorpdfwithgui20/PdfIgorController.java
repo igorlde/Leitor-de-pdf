@@ -215,8 +215,8 @@ public class PdfIgorController {
         last item from the list of logs and
          then uses that item to find the last recorded log.
          */
-            for(int i = 1;i <= listLog.size();i++){
-                LogEntry entry = listLog.get(i);
+        if(listLog !=  null)
+            for(LogEntry entry : listLog){
                 if(entry.getBookName().equalsIgnoreCase(searchedName)){
                     nameBook = entry.getBookName();
                     currentPage = entry.getPage();
