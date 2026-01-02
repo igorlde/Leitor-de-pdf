@@ -202,13 +202,14 @@ public class PdfIgorController {
     @FXML
     public void searchFile(MouseEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
+        MainLogClass mainLogClass = new MainLogClass();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos PDF", "*.pdf"));
         File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
 
         if(selectedFile == null)return;
         ReadPdfCore readPdfCore = new ReadPdfCore();
         String searchedName = readPdfCore.searchNameBook(selectedFile.getAbsolutePath().toLowerCase());
-        MainLogClass mainLogClass = new MainLogClass();
+
 
         List<LogEntry> listLog = mainLogClass.sendBackInformationLog();
         /**this loop retrieves the
