@@ -190,7 +190,7 @@ public class PdfIgorController {
                 throw new ProcessInterruptedException("erro ao pula para a proxima pagina."+ e);
             }
             load = false;
-        }).start();//fix this functions after
+        }).start();
     }
 
     /**
@@ -227,6 +227,10 @@ public class PdfIgorController {
             }
             auxValueFile = selectedFile;
             showPage();
+            if (fileChooser.getInitialFileName() != auxValueFile.getAbsolutePath()){
+                vBox.getChildren().clear();
+                showPage();
+            }
         }
 
     /**
