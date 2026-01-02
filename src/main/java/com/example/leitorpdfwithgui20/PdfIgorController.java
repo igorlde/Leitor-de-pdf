@@ -217,22 +217,22 @@ public class PdfIgorController {
         last item from the list of logs and
          then uses that item to find the last recorded log.
          */
-            for(int i = 1;i <= listLog.size();i++){
-                LogEntry entry = listLog.get(i);
-                if(entry.getBookName().equalsIgnoreCase(searchedName)){
-                    nameBook = entry.getBookName();
-                    currentPage = entry.getPage();
-                    zoom = entry.getZoom();
-                    isFind = true;
-                    break;
-                }
+        if (listLog != null)
+         for (LogEntry entry : listLog) {
+            if (entry.getBookName().equalsIgnoreCase(searchedName)) {
+                nameBook = entry.getBookName();
+                currentPage = entry.getPage();
+                zoom = entry.getZoom();
+                isFind = true;
+            break;
             }
-            auxValueFile = selectedFile;
+         }
+         auxValueFile = selectedFile;
+         showPage();
+         if (fileChooser.getInitialFileName() != auxValueFile.getAbsolutePath()) {
+             vBox.getChildren().clear();
             showPage();
-            if(fileChooser.getInitialFileName() != auxValueFile.getName()){
-                vBox.getChildren().clear();
-                showPage();
-            }
+         }
     }
 
     /**
