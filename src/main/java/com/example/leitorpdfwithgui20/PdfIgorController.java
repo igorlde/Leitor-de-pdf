@@ -54,8 +54,8 @@ public class PdfIgorController {
     private static int currentPage;
     private static float zoom;
     private static String nameBook;
-    private static  int pageNext = 0;
-    private static int pagePrivous = 0;
+    private static  int pageNext = 1;
+    private static int pagePrivous = 1;
     private static boolean isThreePage = false;
 
     /**
@@ -154,7 +154,7 @@ public class PdfIgorController {
         currentPage++;
         if(pageNext >= 3){
             isThreePage = true;
-            pageNext = 0;
+            pageNext = 1;
         }
         showPage();
         new Thread(() -> {
@@ -179,7 +179,7 @@ public class PdfIgorController {
         currentPage--;
         if(pagePrivous >= 3){
             isThreePage = true;
-            pagePrivous = 0;
+            pagePrivous = 1;
         }
         showPage();
         new Thread(() -> {
