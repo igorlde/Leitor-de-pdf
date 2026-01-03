@@ -54,8 +54,8 @@ public class PdfIgorController {
     private static int currentPage;
     private static float zoom;
     private static String nameBook;
-    private static  int pageNext = 0;
-    private static int pagePrivous = 0;
+    private static  int pageNext = 1;
+    private static int pagePrivous = 1;
     private static boolean isThreePage = false;
 
     /**
@@ -154,7 +154,7 @@ public class PdfIgorController {
         currentPage++;
         if(pageNext >= 3){
             isThreePage = true;
-            pageNext = 0;
+            pageNext = 1;
         }
         showPage();
         new Thread(() -> {
@@ -179,7 +179,7 @@ public class PdfIgorController {
         currentPage--;
         if(pagePrivous >= 3){
             isThreePage = true;
-            pagePrivous = 0;
+            pagePrivous = 1;
         }
         showPage();
         new Thread(() -> {
@@ -190,7 +190,7 @@ public class PdfIgorController {
                 throw new ProcessInterruptedException("erro ao pula para a proxima pagina."+ e);
             }
             load = false;
-        }).start();//fix this functions after
+        }).start();
     }
 
     /**
@@ -211,29 +211,28 @@ public class PdfIgorController {
         String searchedName = readPdfCore.searchNameBook(selectedFile.getAbsolutePath().toLowerCase());
 
 
-
         List<LogEntry> listLog = mainLogClass.sendBackInformationLog();
         /**this loop retrieves the
         last item from the list of logs and
          then uses that item to find the last recorded log.
          */
-        if (listLog != null)
-         for (LogEntry entry : listLog) {
-            if (entry.getBookName().equalsIgnoreCase(searchedName)) {
-                nameBook = entry.getBookName();
-                currentPage = entry.getPage();
-                zoom = entry.getZoom();
-                isFind = true;
-            break;
+        if(listLog !=  null)
+            for(LogEntry entry : listLog){
+                if(entry.getBookName().equalsIgnoreCase(searchedName)){
+                    nameBook = entry.getBookName();
+                    currentPage = entry.getPage();
+                    zoom = entry.getZoom();
+                    isFind = true;
+                    break;
+                }
             }
-         }
-         auxValueFile = selectedFile;
-         showPage();
-         if (fileChooser.getInitialFileName() != auxValueFile.getAbsolutePath()) {
-             vBox.getChildren().clear();
+            auxValueFile = selectedFile;
             showPage();
-         }
-    }
+            if (fileChooser.getInitialFileName() != auxValueFile.getAbsolutePath()){
+                vBox.getChildren().clear();
+                showPage();
+            }
+        }
 
     /**
      *this show page kk
